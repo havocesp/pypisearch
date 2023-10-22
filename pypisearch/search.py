@@ -1,9 +1,11 @@
+# -*- coding:utf-8 -*-
+"""Search handler module"""
+from typing import List, Optional, Text
+
 import requests
-from typing import List, Optional
+from tabulate import tabulate
 
-import tabulate
-
-from pypisearch import re_constants as const
+from pypisearch import constants as const
 from pypisearch.result_item import ResultItem
 
 
@@ -17,7 +19,7 @@ class Search:
         query: str,
         page_from: str = "0",
         page_to: Optional[str] = None,
-    ) -> None:
+    ):
         page_from, page_to = int(page_from), int(page_to) if page_to else None
         self.result = []
 
@@ -32,15 +34,23 @@ class Search:
 
                 self.result.extend(result)
 
-    def download_data(self, *, query: str, page: int) -> List[ResultItem]:
+    def download_data(self, *, query: Text, page: int) -> List[ResultItem]:
+        """
+
+        :param query:
+        :param page:
+        :return:
+        """
         url = self.pypi_search_url.format(query=query, page=page)
         page_data = requests.get(url=url).text
         items = const.ITEM_RE.split(page_data)
         result = list(
             filter(
-                lambda result_item: not result_item.is_empty,
+                lambda result_item:
+                not result_item.is_empty,
                 map(
-                    lambda plain_item: ResultItem(plain_text=plain_item),
+                    lambda plain_item:
+                    ResultItem(plain_text=plain_item),
                     items,
                 ),
             )
@@ -52,11 +62,12 @@ class Search:
     def tabulated_result(self) -> str:
         """Returns tabulated list of results."""
 
-        return tabulate.tabulate(
+        return tabulate(
             [
                 [
                     f"{item.name} ({item.version})",
                     f"{item.installed_description}{item.description}",
+                    f'{item.pypi_url}'
                 ]
                 for item in self.result
             ],

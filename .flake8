@@ -1,9 +1,0 @@
-[flake8]
-exclude =
-    .git,
-    __pycache__,
-    venv,
-    .venv,
-    build,
-    dist,
-    pypisearch.egg-info

@@ -1,1 +1,2 @@
-__version__ = "1.3.5"
+# -*- coding: utf-8 -*-
+"""Pypi project finder from CLI."""
