@@ -1,4 +1,7 @@
+# -*- coding:utf-8 -*-
+"""Custom pip-search utility by pypi search line."""
 import argparse
+import re
 
 from pypisearch.search import Search
 
@@ -7,34 +10,36 @@ def main() -> None:
     """Main program entrypoint."""
 
     # Get command arguments
-    arg_parser = argparse.ArgumentParser(
-        description="Custom pip-search utility by pypi search line"
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "q", nargs='+', help="Query for search"
     )
-    arg_parser.add_argument(
-        "q", metavar="query", type=str, help="query for search"
-    )
-    arg_parser.add_argument(
+    ap.add_argument(
         "-p",
         "--page",
         default="1",
         metavar="page",
         type=str,
-        help="search page (default 1, could be range of pages like 1-5)",
+        help="Starting page (default 1, could be range of pages like 1-5)",
     )
-    args = arg_parser.parse_args()
+    args = ap.parse_args()
 
-    page = args.page
-
-    if "-" in page:
-        page_from, page_to = args.page.split("-")
-        if page_from > page_to:
-            raise ValueError("Page from shouldn't be greater then page to")
-    else:
-        page_from = page
+    if '-' in f'{args.page}':
+        # noinspection RegExpAnonymousGroup
+        page_range = re.search(r'^(\d+)-(\d+)$', args.page)
+        page_from, page_to = page_range.groups()
+        if page_from < page_to:
+            raise ValueError("Page from shouldn't be greater then page to.")
+    elif args.page.isnumeric():
+        page_from = args.page
         page_to = None
+    else:
+        raise ValueError('Invalid page range or supplied page is not a integer,')
 
+    # noinspection RegExpAnonymousGroup
+    query = re.sub(r'[\t ]{2,}', ' ', ''.join(args.q).strip())
     # Parse search url and print result table
-    search = Search(query=args.q, page_from=page_from, page_to=page_to)
+    search = Search(query=query, page_from=page_from, page_to=page_to)
     print(search.tabulated_result or "No results")
 
 

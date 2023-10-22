@@ -10,4 +10,16 @@ __pycache__
 # PyPi
 build/
 dist/
-*.egg-info
+*.egg-info.idea/.gitignore
+.idea/aws.xml
+.idea/dbnavigator.xml
+.idea/dictionaries
+.idea/inspectionProfiles
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/markdown.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/pypisearch.iml
+.idea/vcs.xml
+.idea/workspace.xml
