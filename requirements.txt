@@ -3,3 +3,4 @@ setuptools
 tabulate
 pyshorteners
 regex
+security~=1.2.0

@@ -1,12 +1,11 @@
 # -*- coding:utf-8 -*-
 """Search handler module"""
 from typing import List, Optional, Text
-
-import requests
 from tabulate import tabulate
 
 from pypisearch import constants as const
 from pypisearch.result_item import ResultItem
+from security import safe_requests
 
 
 class Search:
@@ -42,7 +41,7 @@ class Search:
         :return:
         """
         url = self.pypi_search_url.format(query=query, page=page)
-        page_data = requests.get(url=url).text
+        page_data = safe_requests.get(url=url).text
         items = const.ITEM_RE.split(page_data)
         result = list(
             filter(
