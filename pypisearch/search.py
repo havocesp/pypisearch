@@ -42,7 +42,7 @@ class Search:
         :return:
         """
         url = self.pypi_search_url.format(query=query, page=page)
-        page_data = requests.get(url=url).text
+        page_data = requests.get(url=url, timeout=60).text
         items = const.ITEM_RE.split(page_data)
         result = list(
             filter(
